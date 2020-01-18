@@ -1,16 +1,48 @@
 plugins {
     id 'java'
+    id 'maven'
 }
 
 group 'conm.tck'
 version '1.0.0'
 
-sourceCompatibility = 1.8
 
 repositories {
+    google()
+    jcenter()
     mavenCentral()
 }
 
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+// 中文乱码问题（错误: 编码GBK的不可映射字符）
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
 }
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+dependencies {
+    compileOnly 'com.google.auto.service:auto-service:1.0-rc6'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
+    // 帮助我们通过类调用的形式来生成Java代码
+    implementation "com.squareup:javapoet:1.10.0"
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('D:\\android_project\\AndroidIOCTrain\\repo'))
+            pom.project {
+                groupId = 'conm.tck.butterknife'
+                artifactId = 'MyButterKnife'
+                version = '1.0.0'
+                description 'view绑定'
+            }
+        }
+    }
+}
+
+
+
+
