@@ -7,6 +7,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.tck.annotation.BindView;
+import com.tck.annotation.OnClick;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.tools.Diagnostic;
 
 // 用来生成 META-INF/services/javax.annotation.processing.Processor 文件
 @AutoService(Processor.class)
@@ -63,6 +66,28 @@ public class ButterKnifeProcess extends AbstractProcessor{
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+
+        if(annotations!=null&&annotations.size()>0){
+            Set<? extends Element> bindViewElements = roundEnv.getElementsAnnotatedWith(BindView.class);
+            Set<? extends Element> onClickElements = roundEnv.getElementsAnnotatedWith(OnClick.class);
+
+            if ((bindViewElements!=null&&bindViewElements.size()>0)||(onClickElements!=null&&onClickElements.size()>0)){
+
+                for (Element bindViewElement : bindViewElements) {
+                    messager.printMessage(Diagnostic.Kind.NOTE,"@BindView >>"+bindViewElement.getSimpleName());
+                    if (bindViewElement.getKind()==ElementKind.FIELD){
+                        VariableElement fieldElement = (VariableElement) bindViewElement;
+
+                    }
+                }
+
+
+
+            }
+            return true;
+        }
+
+
         return false;
     }
 }
