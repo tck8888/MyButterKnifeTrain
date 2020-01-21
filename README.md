@@ -22,3 +22,7 @@ com.tck.compiler.butterknife.ButterKnifeProcess
 ## 其他gradle项目使用
 
      annotationProcessor 'com.tck.compiler:MyButterKnifeTrain:1.0.0'
+
+## 生成的文件目录如下
+
+    app/build/generated/ap_generated_sources/debug/
