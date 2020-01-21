@@ -1,4 +1,4 @@
-package com.tck.compiler;
+package com.tck.compiler.butterknife;
 
 /**
  * 常量类

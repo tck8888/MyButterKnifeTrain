@@ -3,7 +3,7 @@ plugins {
     id 'maven'
 }
 
-group 'com.tck'
+group 'com.tck.compiler'
 version '1.0.0'
 
 
@@ -28,6 +28,7 @@ dependencies {
     // 帮助我们通过类调用的形式来生成Java代码
     implementation "com.squareup:javapoet:1.10.0"
     implementation "com.tck:libannotation:1.0.0"
+    implementation "org.apache.commons:commons-collections4:4.4"
 }
 
 
@@ -36,8 +37,8 @@ uploadArchives {
         mavenDeployer {
             repository(url: uri('D:\\android_project\\AndroidIOCTrain\\repo'))
             pom.project {
-                groupId = 'conm.tck.butterknife'
-                artifactId = 'MyButterKnife'
+                groupId = 'conm.tck.compiler'
+                artifactId = 'butterknife'
                 version = '1.0.0'
                 description 'view绑定'
             }

@@ -1,17 +1,10 @@
-package com.tck.compiler;
+package com.tck.compiler.butterknife;
 
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeSpec;
 import com.tck.libannotation.butterknife.BindView;
 import com.tck.libannotation.butterknife.OnClick;
+import org.apache.commons.collections4.CollectionUtils;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +22,6 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.Elements;
@@ -62,31 +54,52 @@ public class ButterKnifeProcess extends AbstractProcessor {
     // key:类节点, value:被@OnClick注解的方法集合
     private Map<TypeElement, List<ExecutableElement>> tempOnClickMap = new HashMap<>();
 
-    // 该方法主要用于一些初始化的操作，通过该方法的参数ProcessingEnvironment可以获取一些列有用的工具类
+    @Override
+    public synchronized void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        elementUtils = processingEnv.getElementUtils();
+        typeUtils = processingEnv.getTypeUtils();
+        messager = processingEnv.getMessager();
+        filer = processingEnv.getFiler();
+        messager.printMessage(Diagnostic.Kind.NOTE, "注解处理器初始化完成，开始处理注解------------------------------->");
+    }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        if (annotations != null && annotations.size() > 0) {
+        if (CollectionUtils.isNotEmpty(annotations)) {
             Set<? extends Element> bindViewElements = roundEnv.getElementsAnnotatedWith(BindView.class);
             Set<? extends Element> onClickElements = roundEnv.getElementsAnnotatedWith(OnClick.class);
-
-            if ((bindViewElements != null && bindViewElements.size() > 0) || (onClickElements != null && onClickElements.size() > 0)) {
-
-                for (Element bindViewElement : bindViewElements) {
-                    messager.printMessage(Diagnostic.Kind.NOTE, "@BindView >>" + bindViewElement.getSimpleName());
-                    if (bindViewElement.getKind() == ElementKind.FIELD) {
-                        VariableElement fieldElement = (VariableElement) bindViewElement;
-
-                    }
-                }
+            setBindViewMap(bindViewElements);
+            setOnClickMap(onClickElements);
 
 
-            }
             return true;
         }
 
 
         return false;
+    }
+
+    private void setBindViewMap(Set<? extends Element> bindViewElements) {
+        if (CollectionUtils.isNotEmpty(bindViewElements)) {
+            for (Element bindViewElement : bindViewElements) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "@BindView >>> " + bindViewElement.getSimpleName());
+                if (bindViewElement.getKind() == ElementKind.FIELD) {
+                    VariableElement methodElement = (VariableElement) bindViewElement;
+                }
+            }
+        }
+    }
+
+    private void setOnClickMap(Set<? extends Element> onClickElements) {
+        if (CollectionUtils.isNotEmpty(onClickElements)) {
+            for (Element onClickElement : onClickElements) {
+                messager.printMessage(Diagnostic.Kind.NOTE, "@OnClick >>> " + onClickElement.getSimpleName());
+                if (onClickElement.getKind() == ElementKind.METHOD) {
+                    ExecutableElement methodElement = (ExecutableElement) onClickElement;
+                }
+            }
+        }
     }
 }
