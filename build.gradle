@@ -3,7 +3,7 @@ plugins {
     id 'maven'
 }
 
-group 'conm.tck'
+group 'com.tck'
 version '1.0.0'
 
 
@@ -11,6 +11,7 @@ repositories {
     google()
     jcenter()
     mavenCentral()
+    mavenLocal()
 }
 
 // 中文乱码问题（错误: 编码GBK的不可映射字符）
@@ -26,6 +27,7 @@ dependencies {
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc6'
     // 帮助我们通过类调用的形式来生成Java代码
     implementation "com.squareup:javapoet:1.10.0"
+    implementation "com.tck:libannotation:1.0.0"
 }
 
 

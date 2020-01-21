@@ -7,8 +7,8 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.tck.annotation.BindView;
-import com.tck.annotation.OnClick;
+import com.tck.libannotation.butterknife.BindView;
+import com.tck.libannotation.butterknife.OnClick;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import javax.tools.Diagnostic;
 @SupportedAnnotationTypes({Constants.BINDVIEW_ANNOTATION_TYPES, Constants.ONCLICK_ANNOTATION_TYPES})
 // 指定JDK编译版本
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-public class ButterKnifeProcess extends AbstractProcessor{
+public class ButterKnifeProcess extends AbstractProcessor {
 
     // 操作Element工具类 (类、函数、属性都是Element)
     private Elements elementUtils;
@@ -67,20 +67,19 @@ public class ButterKnifeProcess extends AbstractProcessor{
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
 
-        if(annotations!=null&&annotations.size()>0){
+        if (annotations != null && annotations.size() > 0) {
             Set<? extends Element> bindViewElements = roundEnv.getElementsAnnotatedWith(BindView.class);
             Set<? extends Element> onClickElements = roundEnv.getElementsAnnotatedWith(OnClick.class);
 
-            if ((bindViewElements!=null&&bindViewElements.size()>0)||(onClickElements!=null&&onClickElements.size()>0)){
+            if ((bindViewElements != null && bindViewElements.size() > 0) || (onClickElements != null && onClickElements.size() > 0)) {
 
                 for (Element bindViewElement : bindViewElements) {
-                    messager.printMessage(Diagnostic.Kind.NOTE,"@BindView >>"+bindViewElement.getSimpleName());
-                    if (bindViewElement.getKind()==ElementKind.FIELD){
+                    messager.printMessage(Diagnostic.Kind.NOTE, "@BindView >>" + bindViewElement.getSimpleName());
+                    if (bindViewElement.getKind() == ElementKind.FIELD) {
                         VariableElement fieldElement = (VariableElement) bindViewElement;
 
                     }
                 }
-
 
 
             }
